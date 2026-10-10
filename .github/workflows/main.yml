@@ -32,7 +32,8 @@ jobs:
       - name: Create RDP User with Fixed Password
         run: |
           $password = "giangaphu2010@"
-          $securePass = ConvertTo-SecureString$password -AsPlainText -Force
+          $securePass = ConvertTo-SecureString $password -AsPlainText -Force
+
           
           # Đổi tên user thành kozodj
           New-LocalUser -Name "kozodj" -Password $securePass -AccountNeverExpires
