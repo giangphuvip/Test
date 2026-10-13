@@ -46,6 +46,18 @@ jobs:
               Write-Error "User creation failed"
               exit 1
           }
+                    # 1. Tắt tính năng giới hạn băng thông mạng của Windows
+          reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v NetworkThrottlingIndex /t REG_DWORD /d 0xFFFFFFFF /f
+          
+          # 2. Ưu tiên độ phản hồi của hệ thống cho các tác vụ mạng thay vì ứng dụng nền
+          reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v SystemResponsiveness /t REG_DWORD /d 0 /f
+
+          # 3. Bật tính năng nén dữ liệu RDP để truyền tải nhanh hơn qua Tailscale
+          reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v fEnableDataCompression /t REG_DWORD /d 1 /f
+          
+          # 4. Buộc hệ thống sử dụng giao thức UDP (giảm độ trễ đánh kể so với TCP)
+          reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services\Client" /v fClientDisableUDP /t REG_DWORD /d 0 /f
+          
 
       - name: Install Tailscale
         run: |
